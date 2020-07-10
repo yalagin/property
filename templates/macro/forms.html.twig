@@ -1,0 +1,24 @@
+{# if full is specified, occupy a full row and center the buttons #}
+{% macro displayFormActionRow(form, extra, full) %}
+    <div class="form-group row">
+        <div class="{% if full %}col-md-12 text-center{% else %}col-md-10 ml-md-auto{% endif %}">
+            {% if form.offsetExists('submit') %}
+                {{ form_row(form.submit, { 'row': false }) }}
+            {% endif %}
+            {{ extra|raw }}
+            {% if form.offsetExists('delete') %}
+                {{ form_row(form.delete, { 'row': false }) }}
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+{# display a static row of text or other content within a horizontal form #}
+{%- macro displayFormTextRow(title, data, id, additional) -%}
+    <div id="{% if id is not empty %}{{ id }}{% else %}{{ title|lower|replace({' ': '_'}) }}{% endif %}_group" class="form-group row{% if additional['no-margin'] is defined and additional['no-margin'] == true %} mb-0{% endif %}{% if additional['no-display'] is defined and additional['no-display'] == true %} d-none{% endif %}">
+        <label class="col-form-label col-md-{% if additional['label_columns'] is defined %}{{ additional['label_columns'] }}{% else %}2{% endif %}">{{ title }}</label>
+        <div id="{% if id is not empty %}{{ id }}{% else %}{{ title|lower|replace({' ': '_'}) }}{% endif %}_data" class="form-control-plaintext pl-3 col-md-{% if additional['label_columns'] is defined %}{{ 12 - additional['label_columns'] }}{% else %}10{% endif %}">
+            {{ data|raw }}
+        </div>
+    </div>
+{%- endmacro -%}

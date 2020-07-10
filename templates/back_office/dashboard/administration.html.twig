@@ -1,0 +1,22 @@
+{% extends 'back_office/back_office_base.html.twig' %}
+
+{% block page_title %}Administration{% endblock page_title %}
+
+{% block page_body %}
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <h2>Administration</h2>
+            <p>Use this screen to manage users.</p>
+
+            <dl>
+                <dt>Users</dt>
+                <dd class="mb-0"><a href="{{ path('backoffice_users_browse') }}">Browse Users</a></dd>
+                <dd><a href="{{ path('backoffice_user_manage') }}">Add User</a></dd>
+            </dl>
+
+        </div>
+    </div>
+
+{% endblock page_body %}

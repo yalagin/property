@@ -1,0 +1,101 @@
+{%- block button_row -%}
+    {% set input_columns = attr['input_columns'] is defined ? attr['input_columns'] : 12 %}
+    {% if row is not defined or row is same as(true) %}
+        <div class="row m-b-1">
+            <div class="col-md-{{ input_columns }} ml-md-auto text-center">
+    {% endif %}
+    {{- form_widget(form) -}}
+    {% if row is not defined or row is same as(true) %}
+            </div>
+        </div>
+    {% endif %}
+{%- endblock button_row -%}
+
+{%- block checkbox_row -%}
+    {% set label_columns = attr['label_columns'] is defined ? attr['label_columns'] : 2 %}
+    {% set input_columns = attr['input_columns'] is defined ? attr['input_columns'] : 4 %}
+    {% set help_columns = (12 - label_columns - input_columns) > 0 ? (12 - label_columns - input_columns) : 0 %}
+    {% set help_defined = form.vars.help is not empty or attr.help is defined %}
+    {% set is_checkbox_or_radio = (block_prefixes[1] == 'checkbox' or block_prefixes[1] == 'radio') %}
+    <div class="row form-group{% if not compound and not valid %} has-danger{% endif %}{% if (attr['no-margin'] is defined and attr['no-margin'] == true) or form.vars.errors|length > 0 %} mb-0{% endif %}{% if attr['hidden'] is defined and attr['hidden'] == true %} d-none{% endif %}">
+        <div class="col-md-{{ label_columns }}"></div>
+        <div class="col-md-{{ input_columns }}">
+        {{- form_widget(form) -}}
+        {% if attr.additional is defined %}
+            {{ attr.additional|raw }}
+        {% endif %}
+        </div>
+        {% if help_columns > 0 %}
+            <div class="col-md-{{ help_columns }}">
+                {% if attr['extra'] is defined %}
+                    {{ attr['extra']|raw }}
+                {% endif %}
+                {% if not is_checkbox_or_radio and (required or help_defined) %}
+                    <p class="form-control-plaintext" style="display: inline{% if attr['extra'] is not defined %}-block{% endif %};">{% if required %}<span class="pl-1 mr-2"><i class="far fa-check-square" data-toggle="tooltip" data-placement="right" title="Required"></i></span>{% endif %}{% if help_defined %}<span class="fa-help pl-1 pr-3{% if required %} m-l-1{% endif %}" data-toggle="tooltip" data-placement="right" title="{{ (form.vars.help is not empty ? form.vars.help : attr.help) }}"><i class="fas fa-question-circle"></i></span>{% endif %}</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+    {% if form.vars.errors|length > 0 %}
+        <div class="offset-md-{{ label_columns }} col-md-{{ (input_columns + help_columns) }}">
+            {{- form_errors(form) -}}
+        </div>
+    {% endif %}
+{%- endblock checkbox_row -%}
+
+{%- block form_row -%}
+    {% set label_columns = attr['label_columns'] is defined ? attr['label_columns'] : 2 %}
+    {% set input_columns = attr['input_columns'] is defined ? attr['input_columns'] : 4 %}
+    {% set help_columns = (12 - label_columns - input_columns) > 0 ? (12 - label_columns - input_columns) : 0 %}
+    {% set help_defined = form.vars.help is not empty or attr.help is defined %}
+    {% set is_checkbox_or_radio = (block_prefixes[1] == 'checkbox' or block_prefixes[1] == 'radio') %}
+    <div class="row form-group{% if not compound and not valid %} has-danger{% endif %}{% if (attr['no-margin'] is defined and attr['no-margin'] == true) or form.vars.errors|length > 0 %} mb-0{% endif %}{% if attr['hidden'] is defined and attr['hidden'] == true %} d-none{% endif %}">
+        {{- form_label(form, null, { 'label_attr': { 'class': 'col-md-' ~ label_columns ~ ' col-form-label' } }) -}}
+        <div class="col-md-{{ input_columns }}">
+        {{- form_widget(form) -}}
+        {% if attr.additional is defined %}
+            {{ attr.additional|raw }}
+        {% endif %}
+        </div>
+        {% if help_columns > 0 %}
+            <div class="col-md-{{ help_columns }}">
+                {% if attr['extra'] is defined %}
+                    {{ attr['extra']|raw }}
+                {% endif %}
+                {% if not is_checkbox_or_radio and (required or help_defined) %}
+                    <p class="form-control-plaintext" style="display: inline{% if attr['extra'] is not defined %}-block{% endif %};">{% if required %}<span class="pl-1 mr-2"><i class="far fa-check-square" data-toggle="tooltip" data-placement="right" title="Required"></i></span>{% endif %}{% if help_defined %}<span class="fa-help pl-1 pr-3{% if required %} m-l-1{% endif %}" data-toggle="tooltip" data-placement="right" title="{{ (form.vars.help is not empty ? form.vars.help : attr.help) }}"><i class="fas fa-question-circle"></i></span>{% endif %}</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+    {% if form.vars.errors|length > 0 %}
+        <div class="offset-md-{{ label_columns }} col-md-{{ (input_columns + help_columns) }}">
+            {{- form_errors(form) -}}
+        </div>
+    {% endif %}
+{%- endblock form_row -%}
+
+{%- block form_rows -%}
+    {% import 'macro/forms.html.twig' as formMacros %}
+
+    {% for child in form %}
+        {% if child.vars.block_prefixes[1] == 'submit' %}
+            {{ formMacros.displayFormActionRow(form) }}
+        {% elseif not child.rendered %}
+            {{- form_row(child) -}}
+        {% endif %}
+    {% endfor %}
+{%- endblock form_rows -%}
+
+{% block submit_row -%}
+    {% set input_columns = attr['input_columns'] is defined ? attr['input_columns'] : 12 %}
+    {% if row is not defined or row is same as(true) %}
+        <div class="row m-b-1">
+            <div class="col-md-{{ input_columns }} ml-md-auto text-center">
+    {% endif %}
+    {{- form_widget(form) -}}
+    {% if row is not defined or row is same as(true) %}
+            </div>
+        </div>
+    {% endif %}
+{%- endblock submit_row %}

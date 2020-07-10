@@ -1,0 +1,97 @@
+{% if pagination is defined %}
+    {% do pagination.setTemplate('theme/back_office_pagination.html.twig') %}
+{% endif %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('backoffice') }}
+    {% endblock stylesheets %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('backoffice') }}
+    {% endblock javascripts %}
+
+    <title>{% block page_title %}{% endblock page_title %} - Celebrity Agent BackOffice</title>
+
+    {% block head_extra %}{% endblock head_extra %}
+</head>
+<body>
+
+<nav class="navbar fixed-top navbar-expand-md navbar-full navbar-dark bg-dark">
+    <a class="navbar-brand mr-auto" href="{{ path('backoffice_dashboard') }}">
+        <i class="fas fa-gavel" style="color: gray;"></i>
+        Celebrity Agent
+        {% if app.environment == 'development' %}
+            <span class="text-warning">Development Mode</span>
+        {% endif %}
+    </a>
+    <span class="navbar-text text-info">
+        {% block page_breadcrumb %}{% endblock page_breadcrumb %}
+    </span>
+    {% if app.user %}
+        {% if is_administrator() %}
+            <span class="navbar-text text-info">
+                <a class="nav-link-secondary" href="{{ path('backoffice_administration') }}">Administration</a>
+                |&nbsp;
+            </span>
+        {% endif %}
+        <ul class="navbar-nav">
+            <li class="navbar-text text-info">
+                {{ app.user.firstName }}
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('backoffice_logout') }}">Sign Out</a>
+            </li>
+        </ul>
+    {% endif %}
+</nav>
+
+<div class="container{% if fluid_container is defined and fluid_container %}-fluid{% endif %} first-container">
+
+{% for message in app.session.flashbag.get('notice') %}
+<div class="alert alert-success" role="alert">
+    {{ message|raw }}
+</div>
+{% endfor %}
+
+{% for message in app.session.flashbag.get('error') %}
+<div class="alert alert-danger" role="alert">
+    {{ message|raw }}
+</div>
+{% endfor %}
+
+{% if notice is defined and notice is not empty %}
+<div class="alert alert-success" role="alert">
+    {{ notice|raw }}
+</div>
+{% endif %}
+
+{% if error is defined and error is not empty %}
+<div class="alert alert-danger" role="alert">
+    {{ error|raw }}
+</div>
+{% endif %}
+
+{% if (form is defined and not form.vars.valid) or (formError is defined and formError) %}
+<div class="alert alert-danger" role="alert">
+    {% trans %}message.generic_form_error{% endtrans %}
+</div>
+{% endif %}
+
+{% block page_body %}{% endblock page_body %}
+</div>
+
+<script>
+    $(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+
+        if (document.location.hash) {
+            $('.nav-tabs a[href="' + document.location.hash + '"]').tab('show');
+        }
+    });
+</script>
+
+</body>
+</html>

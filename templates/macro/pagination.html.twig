@@ -1,0 +1,19 @@
+{# display the sort arrow for a paginated field #}
+{%- macro displaySortIcon(pagination, field, type) -%}
+    {% if pagination.isSorted(field) %}
+        &nbsp;<i class="fa fa-sort{% if type == 'alpha' %}-alpha{% elseif type =='numeric' %}-numeric{% endif %}-{% if pagination.getDirection() == 'asc' %}down{% else %}up{% endif %}"></i>
+    {% endif %}
+{%- endmacro -%}
+
+{# render a pagination sortable for the given field and title #}
+{%- macro renderSortable(pagination, field, title, type) -%}
+    {% import _self as paginationTools %}
+
+    {% set nextDirection = 'desc' %}
+    {% if pagination.isSorted(field) and pagination.getDirection() == 'desc' %}
+        {% set nextDirection = 'asc' %}
+    {% endif %}
+
+    {{ knp_pagination_sortable(pagination, title, field, {}, { 'direction': nextDirection }) }}
+    {{ paginationTools.displaySortIcon(pagination, field, type) }}
+{%- endmacro -%}

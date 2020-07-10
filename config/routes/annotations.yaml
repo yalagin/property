@@ -1,7 +1,19 @@
-controllers:
-    resource: ../../src/Controller/
+admin:
+    resource: '../../src/Controller/BackOffice/'
     type: annotation
+    schemes: [https]
+    host: 'backoffice.{domain}'
+    requirements:
+        domain: '%domain%'
+    defaults:
+        domain: '%domain%'
 
-kernel:
-    resource: ../../src/Kernel.php
+public:
+    resource: '../../src/Controller/Site/'
     type: annotation
+    schemes: [https]
+    host: 'www.{domain}'
+    requirements:
+        domain: '%domain%'
+    defaults:
+        domain: '%domain%'

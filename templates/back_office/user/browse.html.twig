@@ -1,0 +1,66 @@
+{% extends 'back_office/back_office_base.html.twig' %}
+
+{% import 'macro/pagination.html.twig' as paginationTools %}
+
+{% block page_title %}Users{% endblock page_title %}
+
+{% block page_body %}
+<div class="row">
+    <div class="col-md-12">
+        <h2>Browse Users</h2>
+        <p>Click a user to manage it, or <a href="{{ path('backoffice_user_add') }}">add a new user</a>.
+
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>{{ paginationTools.renderSortable(pagination, 'id', 'ID'|trans, 'numeric') }}</th>
+                        <th>{{ paginationTools.renderSortable(pagination, 'firstName', 'First Name'|trans, 'alpha') }}</th>
+                        <th>{{ paginationTools.renderSortable(pagination, 'lastName', 'Last Name'|trans, 'alpha') }}</th>
+                        <th>{{ paginationTools.renderSortable(pagination, 'email', 'Email'|trans, 'alpha') }}</th>
+                        <th>{{ paginationTools.renderSortable(pagination, 'created', 'Date Registered'|trans, 'numeric') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                {% for user in pagination %}
+                    <tr data-user-id="{{ user.id }}">
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.firstName }}</td>
+                        <td>{{ user.lastName }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.created|date('F j, Y') }}</td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<div class="navigation clearfix">
+    <div class="float-right">
+        {{ knp_pagination_render(pagination) }}
+    </div>
+</div>
+
+<script>
+
+    $(function() {
+
+        $('tbody tr').each(function() {
+            var $this = $(this);
+
+            $this.css('cursor', 'pointer');
+            $this.on('click', function() {
+                window.location = '{{ path('backoffice_user_manage', { 'id': 0 }) }}'.replace('0', $this.data('user-id'));
+            });
+        });
+
+    });
+
+</script>
+
+{% endblock page_body %}

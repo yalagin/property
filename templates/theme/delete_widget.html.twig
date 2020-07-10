@@ -1,0 +1,19 @@
+{%- block delete_widget -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' btn btn-danger')|trim}) -%}
+    {%- set type = type|default('submit') -%}
+    {{ block('button_widget') }}
+    {% if form.vars.confirmation %}
+        <script>
+            $(function() {
+                $('#{{ form.vars.id }}').on('click', function(event) {
+                    event.preventDefault();
+                    if (confirm('{{ form.vars.confirmation_message }}')) {
+                        $form = $(this).closest('form');
+                        $form.append($('<input type="hidden" name="{{ form.vars.full_name }}" value="" />'));
+                        $form.submit();
+                    }
+                });
+            });
+        </script>
+    {% endif %}
+{%- endblock delete_widget -%}

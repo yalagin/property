@@ -1,0 +1,29 @@
+/* enable flexbox */
+$enable-flex: true;
+
+/* import of bootstrap */
+@import "~bootstrap/scss/bootstrap";
+
+/*
+ * General BackOffice Styles
+ */
+
+/* set the page top border to allow for navigation **/
+.first-container {
+    margin-top: 70px;
+}
+
+/* add a green secondary color for calls to action in the navbar */
+.navbar-dark a.nav-link-secondary {
+    color: springgreen;
+}
+
+/* re-color table headings for an inverse table with sort links */
+.thead-dark a {
+    color: springgreen;
+}
+
+.thead-dark a:hover {
+    color: greenyellow;
+    text-decoration: none;
+}

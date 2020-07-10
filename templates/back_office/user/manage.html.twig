@@ -1,0 +1,62 @@
+{% extends 'back_office/back_office_base.html.twig' %}
+
+{% import 'macro/forms.html.twig' as forms %}
+
+{%- block page_title -%}
+    {% if user is not empty %}
+        Manage User {{ user.firstName }} {{ user.lastName }}
+    {% else %}
+        Add User
+    {% endif %}
+{%- endblock page_title -%}
+
+{% block page_breadcrumb %}<a class="nav-link-secondary" href="{{ path('backoffice_users_browse') }}">Users</a> |&nbsp;{% endblock page_breadcrumb %}
+
+{% block page_body %}
+<div class="row">
+    <div class="col-md-12">
+        {% if user is not empty %}
+            <h2>Manage User {{ user.firstName }} {{ user.lastName }}</h2>
+        {% else %}
+            <h2>Add User</h2>
+        {% endif %}
+
+        {{ form_start(form) }}
+
+        <div class="card mb-3">
+            <h5 class="card-header">Identification</h5>
+            <div class="card-body">
+                {{ form_row(form.email, { 'attr': { 'autocomplete': 'new-email'} }) }}
+                {{ form_row(form.password, { 'attr': { 'autocomplete': 'new-password'} }) }}
+                {% if form.role is defined %}
+                    {{ form_row(form.role) }}
+                {% endif %}
+                {{ form_row(form.firstName) }}
+                {{ form_row(form.lastName) }}
+            </div>
+        </div>
+
+        {% if user is not empty %}
+            <div class="card mb-3">
+                <h5 class="card-header">Statistics</h5>
+                <div class="card-body">
+                    {{ forms.displayFormTextRow('Created', user.created|date('F d, Y')) }}
+                    {{ forms.displayFormTextRow('Last Seen', user.lastSeen|date('F d, Y')) }}
+                </div>
+            </div>
+        {% endif %}
+
+        {{ forms.displayFormActionRow(form, '', true) }}
+        {{ form_end(form) }}
+
+    </div>
+</div>
+
+{% if user is not empty and user_is_granted(user, 'ROLE_ADMIN') and not is_granted('ROLE_SYSTEM_ADMIN') %}
+    <script>
+        $(function() {
+            $('form input, button').prop('disabled', true);
+        });
+    </script>
+{% endif %}
+{% endblock page_body %}

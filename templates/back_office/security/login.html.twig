@@ -1,0 +1,25 @@
+{% extends 'back_office/back_office_base.html.twig' %}
+
+{% import 'macro/forms.html.twig' as forms %}
+
+{% block page_title %}Login{% endblock page_title %}
+
+{% block page_body %}
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h5 class="text-center mb-4">Are you an existing Celebrity Agent user? Log in here!</h5>
+
+            {{ form_start(loginForm) }}
+
+            {{ form_row(loginForm._username, { 'attr': { 'input_columns': 6, 'label_columns': 4 } }) }}
+            {{ form_row(loginForm._password, { 'attr': { 'input_columns': 6, 'label_columns': 4 } }) }}
+            {{ form_row(loginForm._remember_me, { 'attr': { 'input_columns': 6, 'label_columns': 4 } }) }}
+
+            {{ forms.displayFormActionRow(loginForm, '', true) }}
+
+            {{ form_end(loginForm) }}
+        </div>
+    </div>
+
+{% endblock page_body %}
