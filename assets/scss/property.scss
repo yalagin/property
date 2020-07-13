@@ -1,0 +1,186 @@
+@import '~@fortawesome/fontawesome-free/css/all.css';
+
+.page-body {
+  width: 100%;
+  margin: 0px auto;
+  //background-color: #BDBDBD;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-content: stretch;
+  align-items: flex-start;
+}
+
+.page-col-left {
+  //min-width: 10em;
+  flex-basis: 30%;
+  //flex: 0 1 auto;
+  min-height: 10em;
+  margin: 0.4em;
+  border-radius: 1em;
+  background-color: white;
+  justify-content: center;
+}
+
+.page-col-right {
+  //min-width: 10em;
+  //flex-basis: %;
+  width: 100%;
+  min-height: 10em;
+  margin: 0.4em;
+  border-radius: 1em;
+  //background-color: lightblue;
+}
+
+.search {
+  width: 100%;
+}
+
+.search-area {
+  width: 95%;
+  border-bottom-right-radius: 5em;
+  border-top-right-radius: 5em;
+  border: 2px solid #000000;
+  border-left: white;
+}
+
+.search-button {
+  border-bottom-left-radius: 5em;
+  border-top-left-radius: 5em;
+  border: 2px solid #000000;
+  border-right: white;
+}
+
+.search-icon {
+  display: flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  background-color: transparent;
+  border: none;
+}
+
+.fa-search {
+  font-size: 1.2rem;
+}
+
+.info-panel {
+  background-color: #085394;
+  min-height: 40rem;
+  margin-top: 1rem;
+  padding-top: 0.2rem;
+  flex: 1;
+  color: white;
+  padding-bottom: 0.2rem;
+}
+
+.navigation {
+  background-color: #073763;
+  margin-top: 0.5rem;
+  margin-right: 1rem;
+  margin-left: 1rem;
+  flex: 1;
+  padding-bottom: 0.5rem;
+}
+
+.navigation-title {
+  padding: 0.5rem;
+}
+
+.navigation-link {
+  display: flex;
+  flex-direction: row;
+  margin: 0.5rem;
+  :hover{
+    cursor: pointer;
+    color: gray;
+  }
+}
+
+.navigation-text {
+  margin-left: 2rem;
+}
+
+.navigation-icon {
+  margin-left: 0.5rem;
+}
+
+.property-name {
+  margin-left: 1rem;
+  margin-top: 1rem;
+  font-size: 3rem;
+}
+
+.property-picture {
+  background-color: #073763;
+  margin-top: 0.5rem;
+  margin-right: 1rem;
+  margin-left: 1rem;
+  flex: 1;
+  padding-bottom: 0.5rem;
+  min-height: 160px;
+}
+
+.property-map {
+  background-color: #073763;
+  flex: 1;
+  min-height: 160px;
+  margin: 2.5rem 1rem 1rem;
+}
+
+.col-right-information {
+  border: 2px solid #000000;
+  min-height: 7rem;
+  margin-left: 1rem;
+  margin-bottom: 1rem;
+  //border-radius: 1em;
+  background-color: white;
+}
+
+.padding-half-rem {
+  padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+}
+
+
+.col-right-main-action-view {
+  border: 2px solid #000000;
+  min-height: 35rem;
+  margin-left: 1rem;
+  margin-bottom: 1rem;
+  //border-radius: 1em;
+  background-color: white;
+}
+
+.buttons-holder {
+  display: flex;
+  flex-wrap: wrap;
+
+  > * {
+    margin-right: 1rem;
+  }
+}
+
+.dropdown-selector {
+  min-width: 4rem;
+}
+
+.where-all-action-will-going-on {
+  padding-top: 1rem;
+  padding-right: 1rem;
+}
+
+.switchers {
+  margin-left: 1rem;
+  display: flex;
+  flex-direction: row;
+
+  > * {
+    //border: 2px solid #000000;
+    margin-right: 1rem;
+  }
+
+  > *:hover {
+    cursor: pointer;
+    color: gray;
+  }
+}
