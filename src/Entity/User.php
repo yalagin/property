@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="CelebrityAgent\Repository\UserRepository")
  * @ORM\Table(
  *     name="user",
  *     uniqueConstraints={
