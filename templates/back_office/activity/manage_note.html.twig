@@ -1,0 +1,55 @@
+{% extends 'back_office/back_office_base.html.twig' %}
+
+{% import 'macro/forms.html.twig' as forms %}
+
+{%- block page_title -%}
+    {% if noteActivity is not empty %}
+        Manage Note # {{ noteActivity.id }} of {{ noteActivity.property.name }}
+    {% else %}
+        Add Note
+    {% endif %}
+{%- endblock page_title -%}
+
+{% block page_breadcrumb %}<a class="nav-link-secondary" href="{{ path('backoffice_property', {'id':property.id} ) }}">Property</a> |&nbsp;{% endblock page_breadcrumb %}
+
+{% block page_body %}
+<div class="row">
+    <div class="col-md-12">
+        {% if noteActivity is not empty %}
+            <h2>Manage Note # {{ noteActivity.id }} of {{ noteActivity.property.name }}</h2>
+        {% else %}
+            <h2>Add Note</h2>
+        {% endif %}
+
+        {{ form_start(form) }}
+
+        <div class="card mb-3">
+            <h5 class="card-header">Your note</h5>
+            <div class="card-body">
+                {{ form_row(form.text) }}
+            </div>
+        </div>
+
+        {% if noteActivity is not empty %}
+            <div class="card mb-3">
+                <h5 class="card-header">Statistics</h5>
+                <div class="card-body">
+                    {{ forms.displayFormTextRow('Created', noteActivity.created|date('F d, Y')) }}
+                </div>
+            </div>
+        {% endif %}
+
+        {{ forms.displayFormActionRow(form, '', true) }}
+        {{ form_end(form) }}
+
+    </div>
+</div>
+{#only sysadmins and owners can edit it #}
+{% if noteActivity is not empty and not  user_is_owner(noteActivity) or  noteActivity is not empty and is_system_administrator() %}
+    <script>
+        $(function() {
+            $('form input, button').prop('disabled', true);
+        });
+    </script>
+{% endif %}
+{% endblock page_body %}

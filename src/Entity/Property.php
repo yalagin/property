@@ -3,6 +3,7 @@
 
 namespace CelebrityAgent\Entity;
 
+use CelebrityAgent\Entity\Interfaeces\HasOwnerInterface;
 use CelebrityAgent\Exception\UserException;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,9 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Property extends AbstractEntity
 {
 
-    public function __construct() {
-        $this->activities = new ArrayCollection();
-    }
+
     /**
      * @ORM\Column(name="id", type="integer")
      * @ORM\GeneratedValue(strategy="IDENTITY")
@@ -73,6 +72,16 @@ class Property extends AbstractEntity
      * @ORM\OneToMany(targetEntity="CelebrityAgent\Entity\Activity\Activity", mappedBy="property")
      */
     private $activities;
+
+    /**
+     *  @ORM\ManyToMany(targetEntity="CelebrityAgent\Entity\User")
+     */
+    private $owners;
+
+    public function __construct() {
+        $this->activities = new ArrayCollection();
+        $this->owners = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -152,5 +161,13 @@ class Property extends AbstractEntity
     public function getActivities()
     {
         return $this->activities;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOwners()
+    {
+        return $this->owners;
     }
 }

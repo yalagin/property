@@ -34,7 +34,8 @@ class ApplicationServiceExtension extends AbstractExtension
         return [
             new TwigFunction('is_administrator', [$this->applicationService, 'isAdministrator']),
             new TwigFunction('is_system_administrator', [$this->applicationService, 'isSystemAdministrator']),
-            new TwigFunction('user_is_granted', [$this->applicationService, 'userHasRole'])
+            new TwigFunction('user_is_granted', [$this->applicationService, 'userHasRole']),
+            new TwigFunction('user_is_owner', [$this->applicationService, 'isUserOwnEntity'])
         ];
     }
 }

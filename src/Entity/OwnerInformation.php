@@ -1,10 +1,9 @@
 <?php
 
-
 namespace CelebrityAgent\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-
 
 /**
  * @ORM\Entity
@@ -20,10 +19,9 @@ class OwnerInformation extends AbstractEntity
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="CelebrityAgent\Entity\Property")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\ManyToMany(targetEntity="CelebrityAgent\Entity\User")
      */
-    private $property;
+    private $users;
 
     /**
      * @ORM\ManyToOne(targetEntity="CelebrityAgent\Entity\User")
@@ -40,4 +38,8 @@ class OwnerInformation extends AbstractEntity
      * @ORM\Column(name="email", type="string", length=255, nullable=true)
      */
     private $email;
+
+    public function __construct() {
+        $this->users = new ArrayCollection();
+    }
 }

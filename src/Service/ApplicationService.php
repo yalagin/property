@@ -2,7 +2,10 @@
 
 namespace CelebrityAgent\Service;
 
+use CelebrityAgent\Entity\Interfaeces\HasOwnerInterface;
 use CelebrityAgent\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -83,5 +86,20 @@ class ApplicationService
             new UsernamePasswordToken($user, 'none', 'none', $user->getRoles()),
             [$role]
         );
+    }
+
+    /**
+     *  Determine if the specified user owns the given entity or not.
+     *
+     * @param HasOwnerInterface $hasOwnerEntity
+     * @return bool
+     */
+    public function isUserOwnEntity(HasOwnerInterface $hasOwnerEntity)
+    {
+        $owners = $hasOwnerEntity->getOwner();
+        if($owners instanceof ArrayCollection){
+            return in_array($this->getCurrentUser(), $owners->toArray()) ;
+        }
+        return $this->getCurrentUser() === $owners;
     }
 }

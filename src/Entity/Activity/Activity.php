@@ -38,33 +38,33 @@ class Activity extends AbstractEntity implements HasOwnerInterface
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @ORM\Id
      */
-    private $id;
+    protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="CelebrityAgent\Entity\User")
      */
-    private $from;
+    protected $from;
 
     /**
      * @ORM\ManyToOne(targetEntity="CelebrityAgent\Entity\User")
      */
-    private $to;
+    protected $to;
 
     /**
      * @ORM\Column(type="text")
      */
-    private $text;
+    protected $text;
 
     /**
      * @ORM\ManyToOne(targetEntity="CelebrityAgent\Entity\Property", inversedBy="activities")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $property;
+    protected $property;
 
     /**
      * @ORM\Column(name="created", type="datetime", nullable=false)
      */
-    private $created;
+    protected $created;
 
     /**
      * @return mixed

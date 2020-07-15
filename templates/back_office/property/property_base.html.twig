@@ -1,0 +1,104 @@
+{% extends 'back_office/back_office_base.html.twig' %}
+
+{% block page_title %}Property -{% endblock page_title %}
+
+{% set fluid_container = 'container' %}
+
+{% block page_body %}
+    <div class="page-body h-100">
+        <div class="page-col-left">
+            <div class="search">
+                <div class="input-group">
+                    <div class="search-button">
+                        <span class="input-group-text search-icon" id="basic-addon1"><i class="fa fa-search icon"></i></span>
+                    </div>
+                    <input type="text" class="form-control search-area" placeholder="Search" aria-label="Search" aria-describedby="basic-addon1">
+                </div>
+            </div>
+            <div class="info-panel">
+                <div class="navigation">
+                    <div class="navigation-title">NAVIGATION MENU</div>
+                    <div class="navigation-link">
+                        <div class="navigation-icon"><i class="fa fa-home icon"></i></div>
+                        <div class="navigation-text">Dashboard</div>
+                    </div>
+                    <div class="navigation-link">
+                        <div class="navigation-icon"><i class="fa fa-pen-alt icon"></i></div>
+                        <div class="navigation-text">Marketing</div>
+                    </div>
+                    <div class="navigation-link">
+                        <div class="navigation-icon"><i class="fa fa-bars icon"></i></div>
+                        <div class="navigation-text">My Account</div>
+                    </div>
+                </div>
+                <div class="property-name">{{ property.name }}</div>
+                <div class="property-picture">
+                    <img src="{{ property.pictureUrl }}" alt="Property Picture" class="property-picture-image">
+                </div>
+                <div class="property-map">
+                </div>
+            </div>
+        </div>
+        <div class="page-col-right">
+            <div class="col-right-information">
+                <div class="padding-half-rem">
+                    {% block msg_for_user %}{% endblock msg_for_user %}
+                </div>
+            </div>
+            <div class="switchers">
+                <div class="activity-switcher ">Activity</div>
+                <div class="tacking-points">Talking Points</div>
+                <div class="owner-info">Owner Info</div>
+            </div>
+            <div class="col-right-main-action-view">
+                <div class="padding-half-rem">
+                    <div class="buttons-holder">
+                        <button class="note btn btn-light"><i class="fa fa-comment" aria-hidden="true"></i> Note</button>
+                        <button class="email btn btn-light"><i class="fa fa-envelope" aria-hidden="true"></i> Email</button>
+                        <button class="sms btn btn-light"><i class="fa fa-comments" aria-hidden="true"></i> SMS</button>
+                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                            <button type="button" class="btn btn-light"><i class="fa fa-phone" aria-hidden="true"></i> Call</button>
+                            <div class="btn-group" role="group">
+                                <button id="btnGroupDrop4" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                                <div class="dropdown-menu" aria-labelledby="btnGroupDrop4">
+                                    <a class="dropdown-item" href="#">Dropdown link</a>
+                                    <a class="dropdown-item" href="#">Dropdown link</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                            <button type="button" class="btn btn-light">Add to List</button>
+                            <div class="btn-group" role="group">
+                                <button id="btnGroupDrop4" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                                <div class="dropdown-menu" aria-labelledby="btnGroupDrop4">
+                                    <a class="dropdown-item" href="#">Dropdown link</a>
+                                    <a class="dropdown-item" href="#">Dropdown link</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dropdown-selector">
+                            <select class="form-control" id="status">
+                                <option id="need-to-talk">Need to Talk to Them</option>
+                                <option id="selected">Listing Opportunity - in Progress</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="where-all-action-will-going-on">
+                        {% block property_content_title %}{% endblock property_content_title %}
+                        <hr/>
+                        {% block property_content %}{% endblock property_content %}
+                    </div>
+            </div>
+        </div>
+    </div>
+{% endblock page_body %}
+
+{% block stylesheets %}
+     {{ parent() }}
+     {{ encore_entry_link_tags('property') }}
+{% endblock stylesheets %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('property') }}
+{% endblock javascripts %}
