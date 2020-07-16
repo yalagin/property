@@ -53,8 +53,12 @@
             <div class="col-right-main-action-view">
                 <div class="padding-half-rem">
                     <div class="buttons-holder">
+                        <a href="{{ path('backoffice_note_add', {'id':property.id} ) }}">
                         <button class="note btn btn-light"><i class="fa fa-comment" aria-hidden="true"></i> Note</button>
+                        </a>
+                        <a href="{{ path('backoffice_email_add', {'id':property.id} ) }}">
                         <button class="email btn btn-light"><i class="fa fa-envelope" aria-hidden="true"></i> Email</button>
+                        </a>
                         <button class="sms btn btn-light"><i class="fa fa-comments" aria-hidden="true"></i> SMS</button>
                         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
                             <button type="button" class="btn btn-light"><i class="fa fa-phone" aria-hidden="true"></i> Call</button>

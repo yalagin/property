@@ -113,18 +113,17 @@ abstract class ActivityService
 
 
     /**
-     * @param NoteActivityDTO $activityDTO
-     * @param NoteActivity $noteActivity
+     * @param ActivityDTO $activityDTO
+     * @param Activity $activity
      * @return FormInterface
-     *
      */
-    public function getActivityForm(ActivityDTO $activityDTO, ?NoteActivity $noteActivity = null): FormInterface
+    public function getActivityForm(ActivityDTO $activityDTO, ?Activity $activity = null): FormInterface
     {
         $formFactory = Forms::createFormFactory();
         $noteActivityForm = $formFactory->create($this->getFormForActivity(), $activityDTO, [
             'include_delete' => $this->isIncludingDelete('activity')
-                || ($activityDTO->isEmpty() && $noteActivity && $this->isUserGrantedPermissionToModifyBool($noteActivity)),
-            'validation_groups' => $noteActivity ? ['manage'] : ['Default']
+                || ($activityDTO->isEmpty() && $activity && $this->isUserGrantedPermissionToModifyBool($activity)),
+            'validation_groups' => $activity ? ['manage'] : ['Default']
         ]);
 
         return $this->form = $noteActivityForm->handleRequest();

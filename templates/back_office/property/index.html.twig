@@ -13,7 +13,16 @@
 {% endblock msg_for_user %}
 
 {% block property_content %}
-
+    {% for activity in property.activities %}
+        <li>
+            {% if activity is  isInstanceOf('CelebrityAgent\\Entity\\Activity\\NoteActivity') %}
+                Note  with text {{ activity.text }} <br> created {{  activity.created|date('F d, Y') }} <br> by {{ activity.owner.firstName }}
+            {% endif %}
+            {% if activity is  isInstanceOf('CelebrityAgent\\Entity\\Activity\\EmailActivity') %}
+                Email  with body {{ activity.text }}  <br> created {{  activity.created|date('F d, Y') }} <br> by {{ activity.owner.firstName }}
+            {% endif %}
+        </li>
+    {% endfor %}
 {% endblock property_content %}
 
 {#{% block stylesheets %}#}

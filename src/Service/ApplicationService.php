@@ -102,4 +102,14 @@ class ApplicationService
         }
         return $this->getCurrentUser() === $owners;
     }
+
+    /**
+     * @param $var
+     * @param $instance
+     * @return bool
+     */
+    public function isInstanceOf($var, $instance) {
+        $b = $var instanceof $instance;
+        return $b;
+    }
 }

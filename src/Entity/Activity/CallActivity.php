@@ -12,4 +12,30 @@ use Doctrine\ORM\Mapping as ORM;
 class CallActivity extends Activity
 {
 
+    /**
+     * telephone number
+     * @ORM\Column(type="string")
+     */
+    protected $sender;
+    /**
+     * telephone number
+     * @ORM\Column(type="string")
+     */
+    protected $receiver;
+
+    /**
+     * @return mixed
+     */
+    public function getSender()
+    {
+        return $this->sender;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getReceiver()
+    {
+        return $this->receiver;
+    }
 }

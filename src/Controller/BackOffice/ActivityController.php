@@ -3,10 +3,11 @@
 
 namespace CelebrityAgent\Controller\BackOffice;
 
+use CelebrityAgent\Entity\Activity\EmailActivity;
 use CelebrityAgent\Entity\Activity\NoteActivity;
 use CelebrityAgent\Entity\Property;
+use CelebrityAgent\Form\DTO\EmailActivityDTO;
 use CelebrityAgent\Form\DTO\NoteActivityDTO;
-use CelebrityAgent\Service\ActivityService;
 use CelebrityAgent\Service\EmailActivityService;
 use CelebrityAgent\Service\NoteActivityService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -67,6 +68,56 @@ class ActivityController extends AbstractController
         return $this->render('back_office/activity/manage_note.html.twig', [
             'form' => $form->createView(),
             'noteActivity' => $noteActivity,
+            'property' => $property,
+        ]);
+    }
+
+    /**
+     * @Route("/property/{id}/activity/email/add", name="backoffice_email_add")
+     * See https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
+     * @param EmailActivityService $activityService
+     * @param Property $property
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function addEmailActivityAction(EmailActivityService $activityService, Property $property)
+    {
+        $form = $activityService->getActivityForm(new EmailActivityDTO());
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $activityService->handleFormSubmission($property);
+        }
+
+        return $this->render('back_office/activity/manage_email.html.twig', [
+            'form' => $form->createView(),
+            'property' => $property,
+        ]);
+    }
+
+    /**
+     * @Route("/activity/email/manage/{id}", name="backoffice_note_manage")
+     * @param EmailActivityService $activityService
+     * @param EmailActivity $activity
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function editEmailAction(EmailActivityService $activityService, EmailActivity $activity)
+    {
+        $activityDTO = EmailActivityDTO::createFromEmailActivity($activity);
+        $form = $activityService->getActivityForm($activityDTO, $activity);
+        $property = $activity->getProperty();
+
+        if ($form->isSubmitted()) {
+            $activityService->isUserGrantedPermissionToModify($activity);
+            if ($form->has('delete') && $form->get('delete')->isClicked()) {
+                return $activityService->handleDeleteButton($property, $activity);
+            }
+            if ($form->isValid()) {
+                return $activityService->handleFormSubmission($property, $activity);
+            }
+        }
+
+        return $this->render('back_office/activity/manage_email.html.twig', [
+            'form' => $form->createView(),
+            'noteActivity' => $activity,
             'property' => $property,
         ]);
     }
