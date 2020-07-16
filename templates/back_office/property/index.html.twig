@@ -14,23 +14,26 @@
 
 {% block property_content %}
     {% for activity in property.activities %}
-        <li>
+        <li> # {{ activity.id }}
             {% if activity is  isInstanceOf('CelebrityAgent\\Entity\\Activity\\NoteActivity') %}
-                Note  with text {{ activity.text }} <br> created {{  activity.created|date('F d, Y') }} <br> by {{ activity.owner.firstName }}
+                <i class="fa fa-comment" aria-hidden="true"></i> Note  with  {{ activity.text }} created {{  activity.created|date('F d, Y') }} by {{ activity.owner.firstName }}
+                <a href="{{ path('backoffice_note_manage', {'id':activity.id} ) }}">
+                    <button class="btn btn-light"><i class="fa fa-edit" aria-hidden="true"></i> Edit</button>
+                </a>
             {% endif %}
             {% if activity is  isInstanceOf('CelebrityAgent\\Entity\\Activity\\EmailActivity') %}
-                Email  with body {{ activity.text }}  <br> created {{  activity.created|date('F d, Y') }} <br> by {{ activity.owner.firstName }}
+                <i class="fa fa-envelope" aria-hidden="true"></i>  Email  with  {{ activity.text }}  created {{  activity.created|date('F d, Y') }} by {{ activity.owner.firstName }}
+                <a href="{{ path('backoffice_email_manage', {'id':activity.id} ) }}">
+                    <button class="btn btn-light"><i class="fa fa-edit" aria-hidden="true"></i> Edit</button>
+                </a>
+            {% endif %}
+            {% if activity is  isInstanceOf('CelebrityAgent\\Entity\\Activity\\SmsActivity') %}
+                <i class="fa fa-comments" aria-hidden="true"></i> Sms  with  {{ activity.text }}
+                created {{  activity.created|date('F d, Y') }} by {{ activity.owner.firstName }}
+                <a href="{{ path('backoffice_sms_manage', {'id':activity.id} ) }}">
+                    <button class="btn btn-light"><i class="fa fa-edit" aria-hidden="true"></i> Edit</button>
+                </a>
             {% endif %}
         </li>
     {% endfor %}
 {% endblock property_content %}
-
-{#{% block stylesheets %}#}
-{#     {{ parent() }}#}
-{#     {{ encore_entry_link_tags('property') }}#}
-{#{% endblock stylesheets %}#}
-
-{#{% block javascripts %}#}
-{#    {{ parent() }}#}
-{#    {{ encore_entry_script_tags('property') }}#}
-{#{% endblock javascripts %}#}

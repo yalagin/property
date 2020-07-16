@@ -5,7 +5,6 @@ namespace CelebrityAgent\Service;
 use CelebrityAgent\Entity\Interfaeces\HasOwnerInterface;
 use CelebrityAgent\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -109,7 +108,6 @@ class ApplicationService
      * @return bool
      */
     public function isInstanceOf($var, $instance) {
-        $b = $var instanceof $instance;
-        return $b;
+        return $var instanceof $instance;
     }
 }

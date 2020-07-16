@@ -5,7 +5,6 @@ namespace CelebrityAgent\Form\DTO;
 
 
 use CelebrityAgent\Entity\Activity\EmailActivity;
-use CelebrityAgent\Entity\Activity\NoteActivity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class EmailActivityDTO extends ActivityDTO

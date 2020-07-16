@@ -5,13 +5,9 @@ namespace CelebrityAgent\Service;
 
 
 use CelebrityAgent\Entity\Activity\Activity;
-use CelebrityAgent\Entity\Activity\NoteActivity;
 use CelebrityAgent\Entity\Property;
-use CelebrityAgent\Entity\User;
 use CelebrityAgent\Exception\ActivityException;
 use CelebrityAgent\Form\DTO\ActivityDTO;
-use CelebrityAgent\Form\DTO\NoteActivityDTO;
-use CelebrityAgent\Form\Type\NoteActivityType;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormInterface;

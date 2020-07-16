@@ -5,11 +5,14 @@ namespace CelebrityAgent\Controller\BackOffice;
 
 use CelebrityAgent\Entity\Activity\EmailActivity;
 use CelebrityAgent\Entity\Activity\NoteActivity;
+use CelebrityAgent\Entity\Activity\SmsActivity;
 use CelebrityAgent\Entity\Property;
 use CelebrityAgent\Form\DTO\EmailActivityDTO;
 use CelebrityAgent\Form\DTO\NoteActivityDTO;
+use CelebrityAgent\Form\DTO\SmsActivityDTO;
 use CelebrityAgent\Service\EmailActivityService;
 use CelebrityAgent\Service\NoteActivityService;
+use CelebrityAgent\Service\SmsActivityService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -94,7 +97,7 @@ class ActivityController extends AbstractController
     }
 
     /**
-     * @Route("/activity/email/manage/{id}", name="backoffice_note_manage")
+     * @Route("/activity/email/manage/{id}", name="backoffice_email_manage")
      * @param EmailActivityService $activityService
      * @param EmailActivity $activity
      * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
@@ -121,4 +124,55 @@ class ActivityController extends AbstractController
             'property' => $property,
         ]);
     }
+
+    /**
+     * @Route("/property/{id}/activity/sms/add", name="backoffice_sms_add")
+     * See https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
+     * @param SmsActivityService $activityService
+     * @param Property $property
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function addSmsActivityAction(SmsActivityService $activityService, Property $property)
+    {
+        $form = $activityService->getActivityForm(new SmsActivityDTO());
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $activityService->handleFormSubmission($property);
+        }
+
+        return $this->render('back_office/activity/manage_sms.html.twig', [
+            'form' => $form->createView(),
+            'property' => $property,
+        ]);
+    }
+
+    /**
+     * @Route("/activity/sms/manage/{id}", name="backoffice_sms_manage")
+     * @param SmsActivityService $activityService
+     * @param SmsActivity $activity
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function editSmsAction(SmsActivityService $activityService, SmsActivity $activity)
+    {
+        $activityDTO = SmsActivityDTO::createFromSmsActivity($activity);
+        $form = $activityService->getActivityForm($activityDTO, $activity);
+        $property = $activity->getProperty();
+
+        if ($form->isSubmitted()) {
+            $activityService->isUserGrantedPermissionToModify($activity);
+            if ($form->has('delete') && $form->get('delete')->isClicked()) {
+                return $activityService->handleDeleteButton($property, $activity);
+            }
+            if ($form->isValid()) {
+                return $activityService->handleFormSubmission($property, $activity);
+            }
+        }
+
+        return $this->render('back_office/activity/manage_sms.html.twig', [
+            'form' => $form->createView(),
+            'noteActivity' => $activity,
+            'property' => $property,
+        ]);
+    }
+
 }
