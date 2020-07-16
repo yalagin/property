@@ -3,13 +3,16 @@
 
 namespace CelebrityAgent\Controller\BackOffice;
 
+use CelebrityAgent\Entity\Activity\CallActivity;
 use CelebrityAgent\Entity\Activity\EmailActivity;
 use CelebrityAgent\Entity\Activity\NoteActivity;
 use CelebrityAgent\Entity\Activity\SmsActivity;
 use CelebrityAgent\Entity\Property;
+use CelebrityAgent\Form\DTO\CallActivityDTO;
 use CelebrityAgent\Form\DTO\EmailActivityDTO;
 use CelebrityAgent\Form\DTO\NoteActivityDTO;
 use CelebrityAgent\Form\DTO\SmsActivityDTO;
+use CelebrityAgent\Service\CallActivityService;
 use CelebrityAgent\Service\EmailActivityService;
 use CelebrityAgent\Service\NoteActivityService;
 use CelebrityAgent\Service\SmsActivityService;
@@ -169,6 +172,57 @@ class ActivityController extends AbstractController
         }
 
         return $this->render('back_office/activity/manage_sms.html.twig', [
+            'form' => $form->createView(),
+            'noteActivity' => $activity,
+            'property' => $property,
+        ]);
+    }
+
+
+    /**
+     * @Route("/property/{id}/activity/call/add", name="backoffice_call_add")
+     * See https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/annotations/converters.html
+     * @param CallActivityService $activityService
+     * @param Property $property
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function addCallActivityAction(CallActivityService $activityService, Property $property)
+    {
+        $form = $activityService->getActivityForm(new CallActivityDTO());
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            return $activityService->handleFormSubmission($property);
+        }
+
+        return $this->render('back_office/activity/manage_call.html.twig', [
+            'form' => $form->createView(),
+            'property' => $property,
+        ]);
+    }
+
+    /**
+     * @Route("/activity/call/manage/{id}", name="backoffice_call_manage")
+     * @param CallActivityService $activityService
+     * @param CallActivity $activity
+     * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function editCallAction(CallActivityService $activityService, CallActivity $activity)
+    {
+        $activityDTO = CallActivityDTO::createFromCallActivity($activity);
+        $form = $activityService->getActivityForm($activityDTO, $activity);
+        $property = $activity->getProperty();
+
+        if ($form->isSubmitted()) {
+            $activityService->isUserGrantedPermissionToModify($activity);
+            if ($form->has('delete') && $form->get('delete')->isClicked()) {
+                return $activityService->handleDeleteButton($property, $activity);
+            }
+            if ($form->isValid()) {
+                return $activityService->handleFormSubmission($property, $activity);
+            }
+        }
+
+        return $this->render('back_office/activity/manage_call.html.twig', [
             'form' => $form->createView(),
             'noteActivity' => $activity,
             'property' => $property,

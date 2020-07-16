@@ -63,7 +63,9 @@
                             <button class="sms btn btn-light"><i class="fa fa-comments" aria-hidden="true"></i> SMS</button>
                         </a>
                         <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                            <a href="{{ path('backoffice_call_add', {'id':property.id} ) }}">
                             <button type="button" class="btn btn-light"><i class="fa fa-phone" aria-hidden="true"></i> Call</button>
+                            </a>
                             <div class="btn-group" role="group">
                                 <button id="btnGroupDrop4" type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop4">

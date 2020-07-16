@@ -1,0 +1,59 @@
+{% extends 'back_office/back_office_base.html.twig' %}
+
+{% import 'macro/forms.html.twig' as forms %}
+
+{%- block page_title -%}
+    {% if callActivity is defined %}
+        Manage Call # {{ callActivity.id }} of {{ callActivity.property.name }}
+    {% else %}
+        Add Call
+    {% endif %}
+{%- endblock page_title -%}
+
+{% block page_breadcrumb %}<a class="nav-link-secondary" href="{{ path('backoffice_property', {'id':property.id} ) }}">Property</a> |&nbsp;{% endblock page_breadcrumb %}
+
+{% block page_body %}
+    <div class="row">
+        <div class="col-md-12">
+            {% if callActivity is defined %}
+                <h2>Manage Call # {{ callActivity.id }} of {{ callActivity.property.name }}</h2>
+            {% else %}
+                <h2>Add Call</h2>
+            {% endif %}
+
+            {{ form_start(form) }}
+
+            <div class="card mb-3">
+                <h5 class="card-header">Your call</h5>
+                <div class="card-body">
+                    {{ form_row(form.sender) }}
+                    {{ form_row(form.receiver) }}
+                    {{ form_row(form.text) }}
+
+                    todo implement file upload
+                </div>
+            </div>
+
+            {% if callActivity is defined %}
+                <div class="card mb-3">
+                    <h5 class="card-header">Statistics</h5>
+                    <div class="card-body">
+                        {{ forms.displayFormTextRow('Created', callActivity.created|date('F d, Y')) }}
+                    </div>
+                </div>
+            {% endif %}
+
+            {{ forms.displayFormActionRow(form, '', true) }}
+            {{ form_end(form) }}
+
+        </div>
+    </div>
+    {#only sysadmins and owners can edit it #}
+    {% if callActivity is defined and not  user_is_owner(callActivity) or  callActivity is defined and is_system_administrator() %}
+        <script>
+            $(function() {
+                $('form input, button').prop('disabled', true);
+            });
+        </script>
+    {% endif %}
+{% endblock page_body %}

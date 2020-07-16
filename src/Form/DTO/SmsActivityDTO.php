@@ -10,10 +10,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 class SmsActivityDTO extends ActivityDTO
 {
     /**
+     * @Assert\Type(
+     *     type="integer",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
      * @Assert\NotNull(message="You must enter who send that sms.")
      */
     public $sender;
     /**
+     * @Assert\Type(
+     *     type="integer",
+     *     message="The value {{ value }} is not a valid {{ type }}."
+     * )
      * @Assert\NotNull(message="You must enter receiver of sms.")
      */
     public $receiver;

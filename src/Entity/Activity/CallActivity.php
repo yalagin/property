@@ -17,11 +17,15 @@ class CallActivity extends Activity
      * @ORM\Column(type="string")
      */
     protected $sender;
+
     /**
      * telephone number
      * @ORM\Column(type="string")
      */
     protected $receiver;
+
+    // todo implement media file upload
+    protected $media;
 
     /**
      * @return mixed

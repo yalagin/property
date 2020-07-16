@@ -34,6 +34,13 @@
                     <button class="btn btn-light"><i class="fa fa-edit" aria-hidden="true"></i> Edit</button>
                 </a>
             {% endif %}
+            {% if activity is  isInstanceOf('CelebrityAgent\\Entity\\Activity\\CallActivity') %}
+                <i class="fa fa-phone" aria-hidden="true"></i> Call  with  {{ activity.text }}
+                created {{  activity.created|date('F d, Y') }} by {{ activity.owner.firstName }}
+                <a href="{{ path('backoffice_call_manage', {'id':activity.id} ) }}">
+                    <button class="btn btn-light"><i class="fa fa-edit" aria-hidden="true"></i> Edit</button>
+                </a>
+            {% endif %}
         </li>
     {% endfor %}
 {% endblock property_content %}
