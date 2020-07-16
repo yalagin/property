@@ -50,6 +50,7 @@ class NoteActivityType extends AbstractType
         $resolver->setDefaults([
             'data_class' => NoteActivityDTO::class,
             'include_delete' => false,
+            'validation_groups' =>  ['Default']
         ]);
     }
 }

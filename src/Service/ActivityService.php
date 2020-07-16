@@ -9,26 +9,64 @@ use CelebrityAgent\Entity\Activity\NoteActivity;
 use CelebrityAgent\Entity\Property;
 use CelebrityAgent\Entity\User;
 use CelebrityAgent\Exception\ActivityException;
-use CelebrityAgent\Exception\UserException;
 use CelebrityAgent\Form\DTO\ActivityDTO;
+use CelebrityAgent\Form\DTO\NoteActivityDTO;
+use CelebrityAgent\Form\Type\NoteActivityType;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\Forms;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\RouterInterface;
 
-class ActivityService
+abstract class ActivityService
 {
+
+    abstract public function processDTO(ActivityDTO $activityDTO, Property $property, ?Activity $activity = null): Activity;
+
+    abstract protected function getFormForActivity();
+
     /**
      * @var EntityManagerInterface
      */
-    private $entityManager;
+    protected $entityManager;
+    /**
+     * @var Request
+     */
+    protected $request;
+    /**
+     * @var ApplicationService
+     */
+    protected $applicationService;
+    /**
+     * @var RouterInterface
+     */
+    protected $router;
+    /**
+     * @var FormInterface
+     */
+    protected $form;
 
     /**
      * Constructor.
      * @param EntityManagerInterface $entityManager
+     * @param ApplicationService $applicationService
+     * @param RouterInterface $router
+     * @param RequestStack $requestStack
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager,
+                                ApplicationService $applicationService,
+                                RouterInterface $router,
+                                RequestStack $requestStack)
     {
         $this->entityManager = $entityManager;
+        $this->request = $requestStack->getCurrentRequest();
+        $this->applicationService = $applicationService;
+        $this->router = $router;
     }
 
     /**
@@ -48,28 +86,108 @@ class ActivityService
         });
     }
 
-    /**
-     * Process an Activity DTO.
-     * @param ActivityDTO $activityDTO
-     * @param Property $property
-     * @param User $loggedInUser
-     * @param Activity|null $activity
-     * @return Activity
-     */
-    public function processDTO(ActivityDTO $activityDTO, Property $property,User $loggedInUser, ?Activity $activity = null): Activity
+
+
+    // for 404
+    public function checkIfThereIsEntity($activity, $class): void
     {
-        if (!$activity instanceof Activity) {
-            $activity = new NoteActivity($property,$activityDTO->text);
-            $this->entityManager->persist($activity);
-        } else {
-            // only update the text if it changed (and was thus valid)
-            if (!empty($activityDTO->text)) {
-                $activity->updateRequiredDetails($activityDTO->text);
-            }
+        if (!is_null($this->request->attributes->get('id')) && !$activity instanceof $class) {
+            throw new NotFoundHttpException("Not Found");
         }
-        // todo add event listener and  inject user automatically
-        $activity->setOwner($loggedInUser);
-        $this->entityManager->flush();
-        return $activity;
+    }
+
+
+    /**
+     * generalization of method
+     * @param string $what
+     * @return bool
+     */
+    public function isIncludingDelete(string $what): bool
+    {
+        return
+            $this->request->isMethod('POST') &&
+            $this->request->request->has($what) &&
+            is_array($this->request->request->get($what)) &&
+            isset($this->request->request->get($what)['delete']);
+    }
+
+
+    /**
+     * @param NoteActivityDTO $activityDTO
+     * @param NoteActivity $noteActivity
+     * @return FormInterface
+     *
+     */
+    public function getActivityForm(ActivityDTO $activityDTO, ?NoteActivity $noteActivity = null): FormInterface
+    {
+        $formFactory = Forms::createFormFactory();
+        $noteActivityForm = $formFactory->create($this->getFormForActivity(), $activityDTO, [
+            'include_delete' => $this->isIncludingDelete('activity')
+                || ($activityDTO->isEmpty() && $noteActivity && $this->isUserGrantedPermissionToModifyBool($noteActivity)),
+            'validation_groups' => $noteActivity ? ['manage'] : ['Default']
+        ]);
+
+        return $this->form = $noteActivityForm->handleRequest();
+    }
+
+
+    /**
+     * @param Activity $activity
+     * todo later on add validation to php docs
+     * only system admins or owner can change or delete
+     * @return bool
+     */
+    public function isUserGrantedPermissionToModifyBool(Activity $activity): bool
+    {
+        if (($activity && $this->applicationService->isSystemAdministrator())
+            || ($activity && $this->applicationService->isUserOwnEntity($activity))) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param Activity $activity
+     * todo later on add validation to php docs
+     * only system admins or owner can change or delete
+     * @return bool
+     */
+    public function isUserGrantedPermissionToModify(Activity $activity): bool
+    {
+        if (!$this->isUserGrantedPermissionToModifyBool($activity)) {
+            throw new AccessDeniedHttpException();
+        }
+        return true;
+    }
+
+    public function handleFormSubmission(Property $property, ?Activity $activity = null)
+    {
+        $original = $this->getOriginal($activity);
+        $activity = $this->processDTO($this->form->getData(), $property, $activity);
+
+        $this->request->getSession()->getFlashBag()
+            ->add('notice', sprintf('Activity # %s of %s %s.', $activity->getId(), $property->getName(), $original ? 'updated' : 'added'));
+        return new RedirectResponse($this->router->generate('backoffice_property', ['id' => $property->getId()]));
+    }
+
+    public function handleDeleteButton(Property $property, Activity $activity)
+    {
+        $original = $this->getOriginal($activity);
+        try {
+            $this->deleteActivity($activity);
+            $this->request->getSession()->getFlashBag()->add('notice', sprintf('Activity %s has been removed.', $original));
+            return new RedirectResponse($this->router->generate('backoffice_property', ['id' => $property->getId()]));
+        } catch (\Exception $exception) {
+            $this->request->getSession()->getFlashBag()->add('error', sprintf('Activity cannot be removed.'));
+            return new RedirectResponse($this->router->generate('backoffice_property', ['id' => $property->getId()]));
+        }
+    }
+
+    private function getOriginal(?Activity $activity = null)
+    {
+        if(!$activity){
+            return false;
+        }
+        return '#' . $activity->getId() . ' of ' . $activity->getProperty()->getName();
     }
 }

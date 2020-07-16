@@ -23,6 +23,8 @@ class UserController extends AbstractController
 {
     /**
      * @Route("/browse", name="backoffice_users_browse")
+     * template looks cool but it's not the best for everything
+     * https://symfony.com/doc/current/best_practices.html#don-t-use-annotations-to-configure-the-controller-template
      * @Template
      */
     public function browseAction(PaginatorInterface $paginator, Request $request)

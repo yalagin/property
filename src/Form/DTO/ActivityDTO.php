@@ -9,8 +9,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 abstract class ActivityDTO
 {
 
-
-
     /**
      */
     public $from;
@@ -38,13 +36,13 @@ abstract class ActivityDTO
      * those two for DTO
      * @var bool
      */
-    private $empty;
+    protected $empty;
 
     /**
      * those two for DTO
      * @var bool
      */
-    private $persisted;
+    protected $persisted;
 
     /**
      * Constructor.
