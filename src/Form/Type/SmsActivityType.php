@@ -8,6 +8,7 @@ use CelebrityAgent\Form\DTO\SmsActivityDTO;
 use CelebrityAgent\Form\DTO\NoteActivityDTO;
 use CelebrityAgent\Form\Extension\Type\DeleteType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -25,13 +26,13 @@ class SmsActivityType extends AbstractType
         $builder
             ->add(
                 'sender',
-                TextType::class,
+                IntegerType::class,
                 ['label' => 'From number']
             )
             ->add(
                 'receiver',
-                TextType::class,
-                ['label' => 'To number ']
+                IntegerType::class,
+                ['label' => 'To number']
             )
 
             ->add(

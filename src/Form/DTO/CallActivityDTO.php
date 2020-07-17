@@ -12,17 +12,17 @@ class CallActivityDTO extends ActivityDTO
     /**
      * @Assert\Type(
      *     type="integer",
-     *     message="The value {{ value }} is not a valid {{ type }}."
+     *     message="The value {{ value }} is not a valid number."
      * )
      * @Assert\NotNull(message="You must enter who send that call.")
      */
     public $sender;
     /**
-     * @Assert\NotNull(message="You must enter receiver of call.")
      * @Assert\Type(
      *     type="integer",
-     *     message="The value {{ value }} is not a valid {{ type }}."
+     *     message="The value {{ value }} is not a valid number."
      * )
+     * @Assert\NotNull(message="You must enter receiver of call.")
      */
     public $receiver;
 

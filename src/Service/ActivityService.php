@@ -10,6 +10,8 @@ use CelebrityAgent\Exception\ActivityException;
 use CelebrityAgent\Form\DTO\ActivityDTO;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -18,9 +20,16 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Validator\Validation;
+use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 
 abstract class ActivityService
 {
+
+    /**
+     * @var FormFactoryInterface
+     */
+    private $formFactory;
 
     abstract public function processDTO(ActivityDTO $activityDTO, Property $property, ?Activity $activity = null): Activity;
 
@@ -53,16 +62,19 @@ abstract class ActivityService
      * @param ApplicationService $applicationService
      * @param RouterInterface $router
      * @param RequestStack $requestStack
+     * @param FormFactoryInterface $formFactory
      */
     public function __construct(EntityManagerInterface $entityManager,
                                 ApplicationService $applicationService,
                                 RouterInterface $router,
-                                RequestStack $requestStack)
+                                RequestStack $requestStack,
+                                FormFactoryInterface $formFactory)
     {
         $this->entityManager = $entityManager;
         $this->request = $requestStack->getCurrentRequest();
         $this->applicationService = $applicationService;
         $this->router = $router;
+        $this->formFactory = $formFactory;
     }
 
     /**
@@ -115,14 +127,13 @@ abstract class ActivityService
      */
     public function getActivityForm(ActivityDTO $activityDTO, ?Activity $activity = null): FormInterface
     {
-        $formFactory = Forms::createFormFactory();
-        $noteActivityForm = $formFactory->create($this->getFormForActivity(), $activityDTO, [
+        $noteActivityForm = $this->formFactory->create($this->getFormForActivity(), $activityDTO, [
             'include_delete' => $this->isIncludingDelete('activity')
                 || ($activityDTO->isEmpty() && $activity && $this->isUserGrantedPermissionToModifyBool($activity)),
-            'validation_groups' => $activity ? ['manage'] : ['Default']
+            'validation_groups' => $activity ? ['Default','manage'] : ['Default']
         ]);
 
-        return $this->form = $noteActivityForm->handleRequest();
+        return $this->form = $noteActivityForm->handleRequest($this->request);
     }
 
 

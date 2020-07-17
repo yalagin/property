@@ -5,14 +5,17 @@ namespace CelebrityAgent\Form\Type;
 
 
 use CelebrityAgent\Form\DTO\CallActivityDTO;
-use CelebrityAgent\Form\DTO\NoteActivityDTO;
+use CelebrityAgent\Form\DTO\UserDTO;
 use CelebrityAgent\Form\Extension\Type\DeleteType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class CallActivityType extends AbstractType
 {
@@ -25,15 +28,14 @@ class CallActivityType extends AbstractType
         $builder
             ->add(
                 'sender',
-                TextType::class,
+                IntegerType::class,
                 ['label' => 'From number']
             )
             ->add(
                 'receiver',
-                TextType::class,
-                ['label' => 'To number ']
+                IntegerType::class,
+                ['label' => 'To number']
             )
-
             ->add(
                 'text',
                 TextareaType::class,
@@ -48,9 +50,9 @@ class CallActivityType extends AbstractType
             $builder->add(
                 'delete',
                 DeleteType::class,
-                [   'confirmation' => true,
+                ['confirmation' => true,
                     'confirmation_message' => 'Are you sure you want to delete this activity?',
-                    'label' => 'Delete Activity' ]
+                    'label' => 'Delete Activity']
             );
         }
     }
@@ -63,7 +65,8 @@ class CallActivityType extends AbstractType
         $resolver->setDefaults([
             'data_class' => CallActivityDTO::class,
             'include_delete' => false,
-            'validation_groups' =>  ['Default']
+            'validation_groups' => [],
+            'cascade_validation' => true,
         ]);
     }
 }
